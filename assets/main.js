@@ -60,6 +60,8 @@
       if (p < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+    // ضمان: السعر النهائي يظهر دائماً حتى لو توقفت الإطارات (تبويب بالخلفية مثلاً)
+    setTimeout(function () { el.textContent = target.toFixed(decimals); }, duration + 300);
   }
   if ('IntersectionObserver' in window && !reduceMotion) {
     counters.forEach(function (el) {
@@ -108,7 +110,7 @@
 
   /* إمالة البطاقات مع حركة الماوس */
   if (finePointer && !reduceMotion) {
-    document.querySelectorAll('.card').forEach(function (card) {
+    document.querySelectorAll('.card, .product').forEach(function (card) {
       card.addEventListener('pointermove', function (e) {
         var r = card.getBoundingClientRect();
         var x = (e.clientX - r.left) / r.width;
