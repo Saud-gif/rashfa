@@ -943,3 +943,114 @@ html.om-open{ overflow:hidden; }
 @media (prefers-reduced-motion: reduce){
   ::view-transition-old(root), ::view-transition-new(root){ animation:none; }
 }
+
+/* ==========================================================
+   مقاسات الجوال
+   ========================================================== */
+@media (max-width: 600px){
+  :root{ --nav-h: 60px; }
+  .container{ padding-inline: 16px; }
+  .section{ padding-block: 44px; }
+  .section-head{ margin-bottom: 26px; }
+  .section-title{ font-size: 32px; }
+  .section-sub{ font-size: 14px; margin-top: 4px; }
+  .btn{ padding: 12px 20px; font-size: 14.5px; }
+
+  /* شريط التنقل */
+  .brand{ font-size: 22px; }
+  .brand svg{ width:16px; height:16px; }
+  .nav-links{ gap: 12px; }
+  .nav-links a:not(.btn){ font-size: 13.5px; }
+  .nav .btn{ padding: 8px 10px; }
+
+  /* الواجهة: الصورة أصغر حتى يظهر الاسم والأزرار في أول شاشة */
+  .hero{ padding-block: 18px 40px; }
+  .hero .container{ gap: 14px; }
+  .hero-media{ width: min(62%, 240px); }
+  .arch{ aspect-ratio: 4/5; }
+  .arch-outline{ inset: -10px 10px 10px -10px; }
+  .seal{ width: 82px; height: 82px; inset-inline-end: -16px; bottom: 6%; }
+  .seal .drop-icon{ width: 22px; height: 22px; }
+  .wordmark{ font-size: 76px; margin-block: 6px 2px; }
+  .romanized{ font-size: 11px; }
+  .hero-tagline{ font-size: 15px; margin-top: 12px; line-height: 1.75; }
+  .hero-actions{ margin-top: 18px; gap: 10px; }
+  .hero-actions .btn{ flex: 1; }
+  .hero-delivery{ margin-top: 14px; font-size: 12.5px; padding: 7px 14px; }
+  .scroll-hint{ display:none; }
+
+  /* رأس الصفحات الداخلية */
+  .page-hero{ min-height: 230px; border-radius: 0 0 26px 26px; }
+  .page-hero h1{ font-size: 52px; }
+  .page-hero p{ font-size: 14.5px; margin-top: 4px; }
+
+  /* بطاقات الاستكشاف */
+  .explore{ gap: 14px; }
+  .explore-card{ min-height: 230px; border-radius: 22px; }
+  .explore-body{ padding: 18px; }
+  .explore-body h3{ font-size: 32px; }
+  .explore-go{ margin-top: 10px; padding: 7px 14px; font-size: 13px; }
+
+  /* المنتجات */
+  .products{ gap: 18px; }
+  .product{ border-radius: 22px; }
+  .product-media{ aspect-ratio: 16/11; }
+  .product-body{ padding: 16px 18px 18px; gap: 8px; }
+  .product-name{ font-size: 21px; }
+  .product-desc{ font-size: 13.5px; }
+  .product-tags li{ font-size: 11.5px; padding: 4px 9px; }
+  .price b{ font-size: 25px; }
+  .product-btn{ padding: 9px 18px; }
+
+  /* قصتنا */
+  .timeline{ gap: 18px; }
+  .tl-item{ grid-template-columns: 48px 1fr; column-gap: 12px; }
+  .tl-icon{ width: 48px; height: 48px; box-shadow: 0 0 0 5px var(--cream-100), var(--shadow-1); }
+  .tl-icon svg{ width: 22px; height: 22px; }
+  .timeline::before{ right: 23px; }
+  .tl-card{ padding: 18px 16px 16px; border-radius: 18px; }
+  .tl-card h3{ font-size: 17px; }
+  .tl-card p{ font-size: 13.5px; }
+  .tl-num{ width: 28px; height: 28px; font-size: 11.5px; top: -11px; }
+
+  /* خطوات الطلب */
+  .steps{ gap: 22px; }
+  .step{ grid-template-columns: 64px 1fr; column-gap: 14px; }
+  .step-icon{ width: 64px; height: 64px; box-shadow: var(--shadow-1), 0 0 0 6px var(--cream-100); }
+  .step-icon svg{ width: 26px; height: 26px; }
+  .step-num{ width: 24px; height: 24px; font-size: 12px; }
+  .steps-line{ right: 31px; }
+  .step h3{ font-size: 17px; }
+  .step p{ font-size: 13.5px; }
+
+  /* انستقرام والمزايا */
+  .showcase{ gap: 30px; }
+  .phone{ width: 210px; border-radius: 34px; }
+  .features{ grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .feature{ padding: 16px 6px; border-radius: 16px; }
+  .feature-icon{ width: 44px; height: 44px; margin-bottom: 10px; }
+  .feature-icon svg{ width: 20px; height: 20px; }
+  .feature-icon::after{ inset: -5px; }
+  .feature h3{ font-size: 12.5px; line-height: 1.4; }
+  .feature p{ display:none; }
+
+  /* أقسام الدعوة والتوصيل */
+  .cta-band, .delivery{ border-radius: 26px; padding: 36px 20px; }
+  .cta-band h2{ font-size: 32px; }
+  .cta-band p, .delivery p{ font-size: 14.5px; }
+  .delivery h2{ font-size: 38px; }
+  .delivery .actions, .cta-band .actions{ margin-top: 20px; }
+  .delivery-map svg{ max-width: 150px; }
+
+  /* التذييل */
+  .footer{ margin-top: 44px; padding-block: 36px calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .footer .brand{ font-size: 32px; }
+  .footer-closing{ font-size: 16px; }
+  .footer-grid{ gap: 22px; }
+  .footer-bottom{ margin-top: 26px; font-size: 12px; }
+
+  /* الأزرار العائمة */
+  .fab{ width: 52px; height: 52px; left: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .fab svg{ width: 24px; height: 24px; }
+  .om-pending{ right: 14px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); font-size: 12px; }
+}
