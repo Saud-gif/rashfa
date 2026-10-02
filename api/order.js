@@ -18,12 +18,10 @@
  * التفاصيل الكاملة للإعداد في WHATSAPP_SETUP.md
  */
 
-// الأسعار هنا هي المرجع — لا نثق بالأسعار القادمة من المتصفح
-const PRODUCTS = {
-  rashfa:  { name: 'رشفة برو', price: 1.7 },
-  classic: { name: 'كولد برو كلاسيك', price: 1.2 },
-  karkade: { name: 'كركدية', price: 0.5 }
-};
+// الأسعار تُقرأ من قائمة المنتجات في قاعدة البيانات — لا نثق بالأسعار القادمة من المتصفح
+// الطلب يُحفظ في قاعدة البيانات (يظهر في لوحة التحكم admin.html)، وإرسال واتساب التلقائي اختياري
+const L = require('../lib/rashfa');
+const WA_REQUIRED = ['WA_TOKEN', 'WA_PHONE_NUMBER_ID', 'OWNER_NUMBER', 'WA_TEMPLATE_OWNER', 'WA_TEMPLATE_CUSTOMER'];
 
 // قيم القوالب في واتساب لا تقبل أسطر جديدة ولا أكثر من 4 مسافات متتالية ولا قيمة فارغة
 function param(value, max) {
@@ -66,26 +64,24 @@ async function sendTemplate(to, template, params) {
   return data;
 }
 
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return res.status(405).json({ ok: false, error: 'method_not_allowed' });
+    return L.send(res, 405, { ok: false, error: 'method_not_allowed' });
   }
 
-  const required = ['WA_TOKEN', 'WA_PHONE_NUMBER_ID', 'OWNER_NUMBER', 'WA_TEMPLATE_OWNER', 'WA_TEMPLATE_CUSTOMER'];
-  if (required.some((k) => !process.env[k])) {
-    // غير مُعدّ بعد — المتصفح يرجع لطريقة رابط واتساب
-    return res.status(503).json({ ok: false, error: 'not_configured' });
+  const waReady = WA_REQUIRED.every((k) => process.env[k]);
+  const storeReady = L.hasStore();
+  if (!waReady && !storeReady) {
+    // لا قاعدة بيانات ولا واتساب تلقائي — المتصفح يرجع لطريقة رابط واتساب
+    return L.send(res, 503, { ok: false, error: 'not_configured' });
   }
 
-  let body = req.body;
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body); } catch (e) { body = null; }
-  }
-  if (!body || typeof body !== 'object') return res.status(400).json({ ok: false, error: 'bad_request' });
+  const body = L.body(req);
 
   // حقل مخفي لصدّ البوتات
-  if (body.website) return res.status(200).json({ ok: true, orderId: 'R000000', customerNotified: false });
+  if (body.website) return L.send(res, 200, { ok: true, orderId: 'R000000', autoSent: false, customerNotified: false });
 
   const name = String(body.name || '').trim();
   let phone = toLatinDigits(body.phone).replace(/\D/g, '');
@@ -96,11 +92,17 @@ module.exports = async function handler(req, res) {
   const address = String(body.address || '').trim();
   const notes = String(body.notes || '').trim();
 
+  let catalog;
+  try { catalog = await L.getProducts(); } catch (e) { catalog = L.DEFAULT_PRODUCTS; }
+  const byId = {};
+  catalog.filter((p) => p.active !== false).forEach((p) => { byId[p.id] = p; });
+
   const items = [];
   const rawItems = body.items && typeof body.items === 'object' ? body.items : {};
   Object.keys(rawItems).forEach((id) => {
     const qty = parseInt(rawItems[id], 10);
-    if (PRODUCTS[id] && qty > 0 && qty <= 50) items.push({ name: PRODUCTS[id].name, qty, subtotal: qty * PRODUCTS[id].price });
+    const p = byId[id];
+    if (p && qty > 0 && qty <= 50) items.push({ id, name: p.name, qty, price: p.price, subtotal: Math.round(qty * p.price * 1000) / 1000 });
   });
 
   const errors = [];
@@ -109,43 +111,55 @@ module.exports = async function handler(req, res) {
   if (area.length < 2 || area.length > 120) errors.push('area');
   if (!map && address.length < 4) errors.push('location');
   if (!items.length) errors.push('items');
-  if (errors.length) return res.status(400).json({ ok: false, error: 'invalid', fields: errors });
+  if (errors.length) return L.send(res, 400, { ok: false, error: 'invalid', fields: errors });
 
   const total = items.reduce((s, i) => s + i.subtotal, 0).toFixed(3);
   const orderId = 'R' + Date.now().toString().slice(-6);
   const itemsText = items.map((i) => `${i.name} × ${i.qty}`).join('، ');
   const customerNumber = '968' + phone;
 
-  // 1) إشعار صاحبة المشروع — هذا الأهم، إذا فشل نرجع خطأ حتى لا يضيع الطلب
-  try {
-    await sendTemplate(process.env.OWNER_NUMBER, process.env.WA_TEMPLATE_OWNER, [
-      param(orderId, 20),
-      param(name, 80),
-      param('+' + customerNumber, 20),
-      param(area, 120),
-      param(map || 'لم يُحدد', 120),
-      param(address || '-', 300),
-      param(itemsText, 300),
-      param(total, 20),
-      param(notes || '-', 300)
-    ]);
-  } catch (err) {
-    console.error('owner notification failed', err.message, JSON.stringify(err.details || {}));
-    return res.status(502).json({ ok: false, error: 'owner_send_failed' });
+  // 1) حفظ الطلب في قاعدة البيانات (يظهر للمدير والموظفين في لوحة التحكم)
+  let saved = false;
+  if (storeReady) {
+    try {
+      await L.saveOrder({
+        id: orderId, createdAt: new Date().toISOString(), status: 'pending',
+        name: name.slice(0, 80), phone: '+' + customerNumber, area: area.slice(0, 120),
+        map, address: address.slice(0, 300), notes: notes.slice(0, 300),
+        items, total, history: [{ status: 'pending', by: 'website', at: new Date().toISOString() }]
+      });
+      saved = true;
+    } catch (err) {
+      console.error('order save failed', err.message);
+    }
   }
 
-  // 2) تأكيد للزبونة — إذا فشل، الطلب وصل لصاحبة المشروع على أي حال
-  let customerNotified = true;
-  try {
-    await sendTemplate(customerNumber, process.env.WA_TEMPLATE_CUSTOMER, [
-      param(name, 80),
-      param(orderId, 20),
-      param(total, 20)
-    ]);
-  } catch (err) {
-    customerNotified = false;
-    console.error('customer confirmation failed', err.message, JSON.stringify(err.details || {}));
+  // 2) إرسال واتساب تلقائي (اختياري — إذا تم إعداد WhatsApp Cloud API)
+  let autoSent = false;
+  let customerNotified = false;
+  if (waReady) {
+    try {
+      await sendTemplate(process.env.OWNER_NUMBER, process.env.WA_TEMPLATE_OWNER, [
+        param(orderId, 20), param(name, 80), param('+' + customerNumber, 20), param(area, 120),
+        param(map || 'لم يُحدد', 120), param(address || '-', 300), param(itemsText, 300),
+        param(total, 20), param(notes || '-', 300)
+      ]);
+      autoSent = true;
+    } catch (err) {
+      console.error('owner notification failed', err.message, JSON.stringify(err.details || {}));
+    }
+    if (autoSent) {
+      try {
+        await sendTemplate(customerNumber, process.env.WA_TEMPLATE_CUSTOMER, [param(name, 80), param(orderId, 20), param(total, 20)]);
+        customerNotified = true;
+      } catch (err) {
+        console.error('customer confirmation failed', err.message, JSON.stringify(err.details || {}));
+      }
+    }
   }
 
-  return res.status(200).json({ ok: true, orderId, total, customerNotified });
+  // إذا لا انحفظ ولا انرسل تلقائياً، نرجع خطأ حتى يكمل المتصفح بطريقة رابط واتساب
+  if (!saved && !autoSent) return L.send(res, 502, { ok: false, error: 'not_delivered' });
+
+  return L.send(res, 200, { ok: true, orderId, total, saved, autoSent, customerNotified });
 };

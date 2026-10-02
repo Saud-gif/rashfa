@@ -43,8 +43,8 @@
   };
 
   /* ===== بناء النافذة ===== */
-  var productRows = PRODUCTS.map(function (p) {
-    return '<div class="om-product" data-id="' + p.id + '">' +
+  function buildRows() { return PRODUCTS.map(function (p) {
+    return '<div class="om-product" data-id="' + esc(p.id) + '">' +
       '<div class="om-product-info"><b>' + esc(p.name) + '</b>' +
       (p.note ? '<span class="om-tag">' + esc(p.note) + '</span>' : '') +
       '<small>' + money(p.price) + '</small></div>' +
@@ -53,7 +53,7 @@
         '<output class="om-qty" aria-live="polite">0</output>' +
         '<button type="button" class="om-step" data-act="dec" aria-label="إنقاص ' + esc(p.name) + '">−</button>' +
       '</div></div>';
-  }).join('');
+  }).join(''); }
 
   var modal = document.createElement('div');
   modal.className = 'om';
@@ -66,7 +66,7 @@
       '<form class="om-form" novalidate>' +
         '<div class="om-head"><span class="eyebrow">New Order</span><h2 id="omTitle">طلب جديد</h2><p>عبّ بياناتك ونوصّل طلبك لأي مكان في السلطنة</p></div>' +
 
-        '<fieldset class="om-section"><legend>١. اختر طلبك</legend>' + productRows +
+        '<fieldset class="om-section"><legend>١. اختر طلبك</legend><div data-rows>' + buildRows() + '</div>' +
           '<p class="om-error" data-err="items"></p>' +
         '</fieldset>' +
 
@@ -136,9 +136,23 @@
     }
   });
 
+  /* ===== المنتجات من قاعدة البيانات (إذا متوفرة، وإلا تبقى القائمة الافتراضية) ===== */
+  if (window.rashfaCatalog) {
+    window.rashfaCatalog.then(function (list) {
+      if (!list) return;
+      PRODUCTS = list.map(function (p) { return { id: p.id, name: p.name, price: Number(p.price), note: p.label || '' }; });
+      var keep = {};
+      PRODUCTS.forEach(function (p) { keep[p.id] = qty[p.id] || 0; });
+      qty = {};
+      form.querySelector('[data-rows]').innerHTML = buildRows();
+      PRODUCTS.forEach(function (p) { setQty(p.id, keep[p.id]); });
+    });
+  }
+
   function setQty(id, n) {
-    qty[id] = Math.max(0, Math.min(50, n));
     var row = form.querySelector('.om-product[data-id="' + id + '"]');
+    if (!row) return;
+    qty[id] = Math.max(0, Math.min(50, n));
     row.querySelector('.om-qty').textContent = qty[id];
     row.classList.toggle('selected', qty[id] > 0);
     var total = PRODUCTS.reduce(function (s, p) { return s + (qty[p.id] || 0) * p.price; }, 0);
@@ -322,7 +336,8 @@
       submitBtn.disabled = false;
       submitBtn.classList.remove('sending');
       submitBtn.innerHTML = submitLabel;
-      if (result.ok) finish(result.data.orderId, true, result.data.customerNotified !== false);
+      // autoSent = انرسل تلقائياً عبر واتساب الرسمي؛ غير كذا الطلب محفوظ والزبون يرسله بنفسه
+      if (result.ok) finish(result.data.orderId, !!result.data.autoSent, result.data.customerNotified !== false);
       else finish('R' + Date.now().toString().slice(-6), false, false);
     });
 

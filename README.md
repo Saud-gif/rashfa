@@ -29,6 +29,10 @@
 الإعدادات (الرقم، المنتجات والأسعار) في أول ملف `assets/order.js`.
 > إذا غيّرتي سعر منتج، غيّريه في `menu.html` وفي `assets/order.js`.
 
+### لوحة التحكم (admin.html)
+مدير يضيف ويعدّل المنتجات، وموظفين يتابعون الطلبات ويغيّرون حالتها — كل شي محفوظ في Vercel (Redis).
+خطوات التفعيل في **[ADMIN_SETUP.md](ADMIN_SETUP.md)**. الملفات: `admin.html`، `assets/admin.js`، `assets/catalog.js`، `api/*.js`، `lib/rashfa.js`.
+
 ### الإرسال التلقائي عبر واتساب الرسمي (Cloud API)
 الدالة `api/order.js` (تشتغل على Vercel) ترسل الطلب تلقائياً لرقم المشروع، وترسل للزبونة رسالة تأكيد على رقمها — بدون ما تضغط شي في واتساب.
 خطوات التفعيل كاملة في **[WHATSAPP_SETUP.md](WHATSAPP_SETUP.md)**.
