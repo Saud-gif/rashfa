@@ -14,9 +14,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C12 2 5 11.5 5 15.5C5 19.6 8.4 22 12 22C15.6 22 19 19.6 19 15.5C19 11.5 12 2 12 2Z' fill='%236E2035'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@500;600;700&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/hero.jpg">
-<link rel="stylesheet" href="assets/style.css?v=14">
+<link rel="stylesheet" href="assets/style.css?v=15">
 <script>(function(h){h.classList.add('js');try{if(matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('seen')}else if(sessionStorage.getItem('rashfa.nav')){h.classList.add('from-nav');sessionStorage.removeItem('rashfa.nav')}else if(sessionStorage.getItem('rashfa.seen')){h.classList.add('seen')}}catch(e){}setTimeout(function(){h.classList.add('ready','loader-gone');h.classList.remove('from-nav')},4500)})(document.documentElement)</script>
 </head>
 <body>
@@ -59,47 +59,71 @@
 
 <main>
   <!-- البطل -->
-  <section class="hero">
-    <div class="bubbles" data-bubbles="16" aria-hidden="true"></div>
+  <section class="hero hero--block">
     <div class="container">
-      <div class="hero-text">
-        <span class="eyebrow">قهوة مختصة وكلاسيكية</span>
-        <h1 class="wordmark">رشفة</h1>
-        <div class="romanized">RASHFAH</div>
-        <p class="hero-tagline">مشروع عُماني بدأ من حب القهوة .. نهتم بالتفاصيل من اختيار البن إلى طريقة التقديم، لنقدم لك تجربة تستحق التكرار.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" data-order href="https://api.whatsapp.com/send?phone=96893933166" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4c-1.4-.1-2.3-.4-3.4-1L3 20l1.1-3.7a8 8 0 01-1.1-4.1A8.4 8.4 0 0112 3.5a8.3 8.3 0 019 8z"/></svg>
-            اطلب الآن
-          </a>
-          <a class="btn btn-ghost" href="menu.html">
-            شوف المينيو
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
-          </a>
-        </div>
-        <div class="hero-delivery">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/></svg>
-          التوصيل متوفر لجميع أنحاء السلطنة
-        </div>
-      </div>
-
-      <div class="hero-media">
-        <div class="arch-outline" aria-hidden="true"></div>
-        <div class="arch">
-          <div data-parallax="0.06" data-parallax-max="24">
-            <img src="assets/hero.jpg" alt="زجاجتا قهوة رشفة بغطاء خشبي" width="1200" height="1600" fetchpriority="high">
+      <div class="hero-block">
+        <div class="bubbles on-dark" data-bubbles="14" aria-hidden="true"></div>
+        <div class="hero-text">
+          <span class="eyebrow">رشفة · قهوة مختصة وكلاسيكية</span>
+          <h1 class="hero-title"><span class="line"><span>قهوتك اليومية،</span></span><span class="line"><span class="accent">بمستوى أعلى.</span></span></h1>
+          <p class="hero-tagline">مشروع عُماني بدأ من حب القهوة .. نهتم بالتفاصيل من اختيار البن إلى طريقة التقديم، ونوصّلها لك في أي مكان بالسلطنة.</p>
+          <div class="hero-actions">
+            <a class="btn btn-light" data-order href="https://api.whatsapp.com/send?phone=96893933166" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4c-1.4-.1-2.3-.4-3.4-1L3 20l1.1-3.7a8 8 0 01-1.1-4.1A8.4 8.4 0 0112 3.5a8.3 8.3 0 019 8z"/></svg>
+              اطلب الآن
+            </a>
+            <a class="btn btn-outline-light" href="menu.html">
+              شوف المينيو
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            </a>
           </div>
+          <ul class="hero-stats">
+            <li><b data-count="3">3</b><span>نكهات مميزة</span></li>
+            <li><b><span data-count="100">100</span>%</b><span>مكونات طبيعية</span></li>
+            <li><b data-count="11">11</b><span>محافظة نوصلها</span></li>
+          </ul>
         </div>
-        <div class="seal" aria-hidden="true">
-          <svg class="ring" viewBox="0 0 124 124">
-            <defs><path id="sealPath" d="M62,62 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"/></defs>
-            <text direction="ltr"><textPath href="#sealPath" textLength="296" lengthAdjust="spacing">SPECIALTY COFFEE • MADE IN OMAN •</textPath></text>
-          </svg>
-          <svg class="drop-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12 2 5 11.5 5 15.5C5 19.6 8.4 22 12 22C15.6 22 19 19.6 19 15.5C19 11.5 12 2 12 2Z"/></svg>
+
+        <div class="hero-media">
+          <div class="arch-outline" aria-hidden="true"></div>
+          <div class="arch">
+            <div data-parallax="0.06" data-parallax-max="24">
+              <img src="assets/hero.jpg" alt="زجاجتا قهوة رشفة بغطاء خشبي" width="1200" height="1600" fetchpriority="high">
+            </div>
+          </div>
+          <div class="seal" aria-hidden="true">
+            <svg class="ring" viewBox="0 0 124 124">
+              <defs><path id="sealPath" d="M62,62 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0"/></defs>
+              <text direction="ltr"><textPath href="#sealPath" textLength="296" lengthAdjust="spacing">SPECIALTY COFFEE • MADE IN OMAN •</textPath></text>
+            </svg>
+            <svg class="drop-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C12 2 5 11.5 5 15.5C5 19.6 8.4 22 12 22C15.6 22 19 19.6 19 15.5C19 11.5 12 2 12 2Z"/></svg>
+          </div>
         </div>
       </div>
     </div>
-    <a class="scroll-hint" href="#explore" aria-label="انزل"></a>
+  </section>
+
+  <!-- شريط النقوش العُمانية -->
+  <div class="container"><div class="pattern-band" aria-hidden="true"></div></div>
+
+  <!-- الضمانات -->
+  <section class="container trust" data-stagger="0.1" aria-label="مميزات الخدمة">
+    <div class="trust-item" data-reveal>
+      <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/></svg></span>
+      <div><b>توصيل لكل السلطنة</b><span>نوصّلها لين باب البيت</span></div>
+    </div>
+    <div class="trust-item" data-reveal>
+      <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20M6 15h3"/></svg></span>
+      <div><b>الدفع عند الاستلام</b><span>ادفع لما توصلك رشفتك</span></div>
+    </div>
+    <div class="trust-item" data-reveal>
+      <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z"/><path d="M5 19l9-9"/></svg></span>
+      <div><b>مكونات طبيعية</b><span>بدون إضافات ولا مواد حافظة</span></div>
+    </div>
+    <div class="trust-item" data-reveal>
+      <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4c-1.4-.1-2.3-.4-3.4-1L3 20l1.1-3.7a8 8 0 01-1.1-4.1A8.4 8.4 0 0112 3.5a8.3 8.3 0 019 8z"/></svg></span>
+      <div><b>طلب سريع بواتساب</b><span>نأكّد طلبك خلال دقائق</span></div>
+    </div>
   </section>
 
   <!-- مشهد الزجاجة المثبّت مع التمرير -->
@@ -125,26 +149,60 @@
     </div>
   </section>
 
-  <!-- استكشف -->
-  <section class="section" id="explore">
-    <div class="container">
-      <div class="section-head" data-reveal="blur">
-        <span class="eyebrow">Explore</span>
-        <h2 class="section-title">اكتشف رشفة</h2>
+  <!-- قصة مختصرة: صورة + نص -->
+  <section class="section split">
+    <div class="container split-grid">
+      <div class="split-text" data-reveal>
+        <span class="eyebrow">Our Story</span>
+        <h2 class="split-title">تجربة <span class="accent">قهوة</span><br>تستحق التكرار.</h2>
+        <p class="split-lead">من اختيار البن إلى طريقة التقديم .. كل تفصيلة تهمّنا.</p>
+        <p>رشفة مشروع شاب عُماني بدأ بخطوة بسيطة من حب القهوة، وحلمنا أن تصبح «رشفة» اسماً يُذكر مع القهوة المميزة. نبدأ صغيرين ونطمح للكبير، وبكل رشفة نبني حكايتنا.</p>
+        <a class="btn btn-primary" href="story.html">
+          اقرأ قصتنا
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        </a>
       </div>
-      <div class="explore" data-stagger="0.15">
-        <a class="explore-card" href="menu.html" data-reveal>
-          <img src="assets/p-rashfa.jpg" alt="" loading="lazy">
-          <div class="explore-body"><span class="eyebrow">Our Menu</span><h3>المينيو</h3><p>رشفة برو، كولد برو كلاسيك، وكركدية</p><span class="explore-go">شوف المينيو <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></span></div>
-        </a>
-        <a class="explore-card" href="story.html" data-reveal>
-          <img src="assets/hero.jpg" alt="" loading="lazy" style="object-position:50% 65%">
-          <div class="explore-body"><span class="eyebrow">Our Story</span><h3>قصتنا</h3><p>مشروع شاب عُماني بدأ من حب القهوة</p><span class="explore-go">اقرأ قصتنا <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></span></div>
-        </a>
-        <a class="explore-card" href="order.html" data-reveal>
-          <img src="assets/p-karkade.jpg" alt="" loading="lazy">
-          <div class="explore-body"><span class="eyebrow">How To Order</span><h3>طريقة الطلب</h3><p>ثلاث خطوات وتوصلك رشفتك لأي مكان في السلطنة</p><span class="explore-go">كيف أطلب؟ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></span></div>
-        </a>
+      <div class="split-media" data-reveal="zoom">
+        <span class="split-frame" aria-hidden="true"></span>
+        <img src="assets/p-classic.jpg" alt="زجاجة كولد برو كلاسيك من رشفة" width="800" height="707" loading="lazy">
+        <span class="split-badge"><b>صنع بحب</b>في عُمان</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- المينيو بشكل قائمة أسعار -->
+  <section class="section menu-list" style="padding-top:0">
+    <div class="container">
+      <div class="menu-list-box">
+        <div class="menu-list-text" data-reveal>
+          <span class="eyebrow">Our Menu</span>
+          <h2 class="split-title">المينيو</h2>
+          <p class="split-lead">اختر نكهتك، وخلّ الباقي علينا</p>
+          <ul class="price-list">
+            <li>
+              <div class="pl-row"><span class="pl-name">رشفة برو <em>الأكثر طلباً</em></span><span class="pl-dots"></span><span class="pl-price">1.700 <small>ر.ع</small></span></div>
+              <p>قهوتنا المختصة المميزة — تخمير بارد بطيء بطعم عميق بلا مرارة</p>
+            </li>
+            <li>
+              <div class="pl-row"><span class="pl-name">كولد برو كلاسيك</span><span class="pl-dots"></span><span class="pl-price">1.200 <small>ر.ع</small></span></div>
+              <p>نقي ومتوازن، الطعم الأصلي للقهوة الباردة</p>
+            </li>
+            <li>
+              <div class="pl-row"><span class="pl-name">كركدية</span><span class="pl-dots"></span><span class="pl-price">0.500 <small>ر.ع</small></span></div>
+              <p>منعش وطبيعي، خالٍ من الكافيين</p>
+            </li>
+          </ul>
+          <div class="menu-list-actions">
+            <a class="btn btn-primary" data-order href="https://api.whatsapp.com/send?phone=96893933166" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4c-1.4-.1-2.3-.4-3.4-1L3 20l1.1-3.7a8 8 0 01-1.1-4.1A8.4 8.4 0 0112 3.5a8.3 8.3 0 019 8z"/></svg>
+              اطلب الآن
+            </a>
+            <a class="btn btn-ghost" href="menu.html">المينيو بالتفصيل</a>
+          </div>
+        </div>
+        <div class="menu-list-media" data-reveal="zoom">
+          <img src="assets/p-karkade.jpg" alt="كركدية رشفة" width="800" height="620" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
@@ -226,10 +284,10 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-8.9 8.4c-1.4-.1-2.3-.4-3.4-1L3 20l1.1-3.7a8 8 0 01-1.1-4.1A8.4 8.4 0 0112 3.5a8.3 8.3 0 019 8z"/></svg>
 </a>
 
-<script src="assets/main.js?v=14" defer></script>
-<script src="assets/order.js?v=14" defer></script>
-<script src="assets/fx.js?v=14" defer></script>
+<script src="assets/main.js?v=15" defer></script>
+<script src="assets/order.js?v=15" defer></script>
+<script src="assets/fx.js?v=15" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-<script src="assets/fx2.js?v=14" defer></script>
+<script src="assets/fx2.js?v=15" defer></script>
 </body>
 </html>
