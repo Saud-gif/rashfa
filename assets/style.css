@@ -1084,6 +1084,67 @@ body::after{
 }
 
 /* ==========================================================
+   المستوى الثاني (assets/fx2.js)
+   ========================================================== */
+/* تمرير ناعم (Lenis) */
+html.lenis, html.lenis body{ height:auto; }
+.lenis.lenis-smooth{ scroll-behavior: auto !important; }
+.lenis.lenis-stopped{ overflow: hidden; }
+
+/* صورة سائلة */
+[data-parallax]{ position:relative; }
+.liquid-canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; animation: fadeIn .8s ease both; }
+.liquid-hidden{ opacity:0; }
+
+/* تلاشي الواجهة عند النزول */
+.hero .container{
+  opacity: calc(1 - var(--so, 0) * 1.15);
+  transform: translateY(calc(var(--so, 0) * -70px)) scale(calc(1 - var(--so, 0) * .06));
+  will-change: transform, opacity;
+}
+
+/* رذاذ القطرات */
+.splash-canvas{ position:fixed; inset:0; z-index:95; pointer-events:none; }
+
+/* مشهد الزجاجة المثبّت */
+.pin{ position:relative; height: 340vh; --p: 0; --q: min(1, calc(var(--p) * 1.7)); }
+.pin-sticky{ position: sticky; top: 0; height: 100vh; height: 100svh; overflow:hidden; display:grid; place-items:center; }
+.pin-media{
+  position:absolute; inset:0; overflow:hidden;
+  clip-path: inset(calc((1 - var(--q)) * 20%) calc((1 - var(--q)) * 28%) round calc((1 - var(--q)) * 48px + 0px));
+  will-change: clip-path;
+}
+.pin-media img{ width:100%; height:100%; object-fit:cover; object-position: 50% 45%; transform: scale(calc(1.35 - var(--q) * .35)); will-change: transform; }
+.pin-media::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(ellipse at center, rgba(46,10,21,.35), rgba(46,10,21,.85));
+  opacity: calc(var(--q) * .95);
+}
+.pin-lines{ position:relative; z-index:2; width:100%; height:100%; }
+.pin-line{
+  position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  font-family:'Aref Ruqaa', serif; font-weight:700; color: var(--cream-50);
+  font-size: clamp(46px, 9vw, 120px); line-height:1.15; padding-inline: 20px;
+  text-shadow: 0 6px 40px rgba(0,0,0,.45);
+  opacity: clamp(0, min(calc(var(--l, -1) * 5), calc((1 - var(--l, -1)) * 5)), 1);
+  transform: translateY(calc((.5 - var(--l, 0)) * 90px)) scale(calc(.94 + clamp(0, var(--l, 0), 1) * .06));
+  filter: blur(calc((1 - clamp(0, min(calc(var(--l, -1) * 5), calc((1 - var(--l, -1)) * 5)), 1)) * 10px));
+  pointer-events:none;
+}
+.pin-eyebrow{ font-family:'Tajawal', sans-serif; font-size: 14px; letter-spacing:.3em; color: var(--wood-400); font-weight:800; margin-bottom: 8px; text-shadow:none; }
+.pin-final{ opacity: clamp(0, calc(var(--l, -1) * 5), 1); transform: translateY(calc((1 - clamp(0, var(--l, 0) * 3, 1)) * 60px)); filter:none; }
+.pin-final.on{ pointer-events:auto; }
+.pin-final strong{ font-weight:700; }
+.pin-final .btn{ margin-top: 26px; font-family:'Tajawal', sans-serif; text-shadow:none; }
+.pin-progress{ position:absolute; z-index:3; bottom: 28px; left:50%; width: 120px; height:3px; margin-left:-60px; border-radius:3px; background: rgba(250,244,233,.25); overflow:hidden; opacity: calc(var(--q) * 1); }
+.pin-progress span{ display:block; height:100%; background: var(--wood-400); transform-origin: right; transform: scaleX(var(--p)); }
+@media (max-width: 600px){
+  .pin{ height: 300vh; }
+  .pin-line{ font-size: 50px; }
+  .pin-final strong{ font-size: 40px; }
+}
+
+/* ==========================================================
    مقاسات الجوال
    ========================================================== */
 @media (max-width: 600px){
