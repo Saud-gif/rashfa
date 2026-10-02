@@ -8,9 +8,9 @@
   var ORDER_API = '/api/order';
   var CURRENCY = 'ر.ع';
   var PRODUCTS = [
-    { id: 'rashfa',  name: 'كولد برو رشفة', price: 1.700, note: 'الأكثر طلباً' },
-    { id: 'classic', name: 'كلاسيكي',       price: 1.200 },
-    { id: 'karkade', name: 'كركديه',         price: 0.500 }
+    { id: 'rashfa',  name: 'رشفة برو', price: 1.700, note: 'الأكثر طلباً' },
+    { id: 'classic', name: 'كولد برو كلاسيك', price: 1.200 },
+    { id: 'karkade', name: 'كركدية', price: 0.500 }
   ];
   var STORE_KEY = 'rashfa.customer';
   var LAST_ORDER_KEY = 'rashfa.lastOrder';
@@ -64,9 +64,9 @@
       '<button type="button" class="om-close" data-close aria-label="إغلاق">' + icons.close + '</button>' +
 
       '<form class="om-form" novalidate>' +
-        '<div class="om-head"><span class="eyebrow">New Order</span><h2 id="omTitle">طلب جديد</h2><p>عبّي بياناتك ونوصلك طلبك داخل سمائل</p></div>' +
+        '<div class="om-head"><span class="eyebrow">New Order</span><h2 id="omTitle">طلب جديد</h2><p>عبّ بياناتك ونوصّل طلبك لأي مكان في السلطنة</p></div>' +
 
-        '<fieldset class="om-section"><legend>١. اختاري طلبك</legend>' + productRows +
+        '<fieldset class="om-section"><legend>١. اختر طلبك</legend>' + productRows +
           '<p class="om-error" data-err="items"></p>' +
         '</fieldset>' +
 
@@ -74,13 +74,13 @@
           '<input name="website" class="om-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
           '<label class="om-field"><span>الاسم</span><input name="name" autocomplete="name" required placeholder="اسمك الكريم"><em class="om-error" data-err="name"></em></label>' +
           '<label class="om-field"><span>رقم الهاتف</span><div class="om-phone"><span class="om-cc">968+</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" required placeholder="9XXXXXXX" dir="ltr"></div><em class="om-error" data-err="phone"></em></label>' +
-          '<label class="om-field"><span>المنطقة</span><input name="area" required placeholder="مثال: سمائل — الحي / القرية"><em class="om-error" data-err="area"></em></label>' +
+          '<label class="om-field"><span>المنطقة</span><input name="area" required placeholder="مثال: سمائل — الحي أو القرية"><em class="om-error" data-err="area"></em></label>' +
           '<div class="om-field"><span>الموقع</span>' +
-            '<button type="button" class="om-locate">' + icons.pin + '<span>حددي موقعي الحالي</span></button>' +
+            '<button type="button" class="om-locate">' + icons.pin + '<span>حدد موقعي الحالي</span></button>' +
             '<input type="hidden" name="map">' +
             '<div class="om-map" hidden><iframe title="موقعك على الخريطة" referrerpolicy="no-referrer-when-downgrade"></iframe>' +
               '<a target="_blank" rel="noopener">' + icons.pin + 'فتح في خرائط جوجل</a></div>' +
-            '<textarea name="address" rows="2" placeholder="وصف العنوان (مثال: بجانب المسجد، بيت لونه أبيض) — اختياري إذا حددتي الموقع"></textarea>' +
+            '<textarea name="address" rows="2" placeholder="وصف العنوان (مثال: بجانب المسجد، بيت لونه أبيض) — اختياري إذا حددت الموقع"></textarea>' +
             '<em class="om-error" data-err="location"></em>' +
           '</div>' +
           '<label class="om-field"><span>ملاحظات <small>(اختياري)</small></span><textarea name="notes" rows="2" placeholder="وقت التوصيل المناسب، أي طلب خاص..."></textarea></label>' +
@@ -98,7 +98,7 @@
         '<p class="om-done-num">رقم طلبك: <b class="ltr" data-order-id></b></p>' +
         '<div class="om-status">' + icons.clock + '<div><b>طلبك قيد الانتظار</b><span data-status-text></span></div></div>' +
         '<div class="om-summary" data-summary></div>' +
-        '<p class="om-hint" data-manual-only><b>مهم:</b> اضغطي «إرسال» داخل واتساب حتى يوصلنا طلبك. إذا ما انفتح واتساب، جرّبي الروابط تحت.</p>' +
+        '<p class="om-hint" data-manual-only><b>مهم:</b> اضغط «إرسال» داخل واتساب حتى يوصلنا طلبك. إذا ما انفتح واتساب، جرّب الروابط تحت.</p>' +
         '<div class="om-done-actions">' +
           '<a class="btn btn-primary" data-wa-link data-manual-only target="_blank" rel="noopener">' + icons.wa + 'إرسال الطلب على واتساب</a>' +
           '<button type="button" class="btn btn-ghost" data-close>تم</button>' +
@@ -107,7 +107,7 @@
           '<a data-wa-web target="_blank" rel="noopener">فتح واتساب ويب</a>' +
           '<button type="button" data-copy>نسخ نص الطلب</button>' +
         '</div>' +
-        '<p class="om-copy-note" hidden>تم نسخ الطلب ✓ الصقيه في محادثة واتساب مع <span class="ltr">+968 9393 3166</span></p>' +
+        '<p class="om-copy-note" hidden>تم نسخ الطلب ✓ الصقه في محادثة واتساب مع <span class="ltr">+968 9393 3166</span></p>' +
       '</div>' +
     '</div>';
   document.body.appendChild(modal);
@@ -211,7 +211,7 @@
     var label = locateBtn.querySelector('span');
     if (locating) return;
     if (!navigator.geolocation || window.isSecureContext === false) {
-      label.textContent = 'تحديد الموقع غير متاح هنا — اكتبي وصف العنوان';
+      label.textContent = 'تحديد الموقع غير متاح هنا — اكتب وصف العنوان';
       return;
     }
     locating = true;
@@ -224,7 +224,7 @@
       form.elements.map.value = link;
       locateBtn.classList.remove('loading'); locateBtn.classList.add('done');
       var acc = Math.round(pos.coords.accuracy);
-      label.textContent = 'تم تحديد موقعك ✓' + (acc ? ' (دقة ' + acc + ' م)' : '') + ' — اضغطي للتحديث';
+      label.textContent = 'تم تحديد موقعك ✓' + (acc ? ' (دقة ' + acc + ' م)' : '') + ' — اضغط للتحديث';
       mapBox.querySelector('iframe').src = 'https://maps.google.com/maps?q=' + lat + ',' + lng + '&z=16&output=embed';
       mapBox.querySelector('a').href = link;
       mapBox.hidden = false;
@@ -235,8 +235,8 @@
       form.elements.map.value = '';
       mapBox.hidden = true;
       label.textContent = err.code === 1
-        ? 'لم يتم السماح بالموقع — فعّلي الموقع للمتصفح أو اكتبي العنوان'
-        : 'تعذّر تحديد الموقع — اضغطي للمحاولة مرة ثانية';
+        ? 'لم يتم السماح بالموقع — فعّل الموقع للمتصفح أو اكتب العنوان'
+        : 'تعذّر تحديد الموقع — اضغط للمحاولة مرة ثانية';
     }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
   }
   locateBtn.addEventListener('click', locate);
@@ -259,11 +259,11 @@
 
     var ok = true;
     function fail(k, m) { showError(k, m); ok = false; }
-    if (!items.length) fail('items', 'اختاري منتج واحد على الأقل');
-    if (v.name.length < 2) fail('name', 'اكتبي اسمك');
+    if (!items.length) fail('items', 'اختر منتج واحد على الأقل');
+    if (v.name.length < 2) fail('name', 'اكتب اسمك');
     if (!/^[79]\d{7}$/.test(v.phone)) fail('phone', 'رقم عُماني من 8 أرقام يبدأ بـ 9 أو 7');
-    if (v.area.length < 2) fail('area', 'اكتبي منطقتك');
-    if (!v.map && v.address.length < 4) fail('location', 'حددي موقعك أو اكتبي وصف العنوان');
+    if (v.area.length < 2) fail('area', 'اكتب منطقتك');
+    if (!v.map && v.address.length < 4) fail('location', 'حدد موقعك أو اكتب وصف العنوان');
     if (!ok) {
       var first = form.querySelector('.om-error:not(:empty)');
       if (first) first.closest('.om-section, .om-field').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -355,7 +355,7 @@
         ? (customerNotified
             ? 'وصلنا طلبك، وأرسلنا لك رسالة تأكيد على واتساب على رقم ' + ltrPhone + '. طلبك قيد الانتظار إلى أن نتواصل معك لتأكيده وتحديد موعد التوصيل.'
             : 'وصلنا طلبك، وراح نتواصل معك على واتساب على رقم ' + ltrPhone + ' لتأكيده وتحديد موعد التوصيل. طلبك قيد الانتظار إلى أن يتم الرد عليك.')
-        : 'خطوة أخيرة: اضغطي الزر تحت لإرسال طلبك لنا على واتساب. بعدها طلبك يبقى قيد الانتظار إلى أن نرد عليك.';
+        : 'خطوة أخيرة: اضغط الزر تحت لإرسال طلبك لنا على واتساب. بعدها طلبك يبقى قيد الانتظار إلى أن نرد عليك.';
       done.querySelectorAll('[data-manual-only]').forEach(function (el) { el.hidden = auto; });
       done.querySelector('[data-wa-link]').href = isMobile ? waUrl : waWebUrl;
       var alt = done.querySelector('[data-wa-web]');

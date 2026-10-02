@@ -11,7 +11,7 @@
     });
   });
 
-  var revealTargets = document.querySelectorAll('[data-reveal], .steps');
+  var revealTargets = document.querySelectorAll('[data-reveal], .steps, .timeline');
   if ('IntersectionObserver' in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
