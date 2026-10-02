@@ -4,6 +4,8 @@
   var WHATSAPP_NUMBER = '96893933166';
   // رابط Google Apps Script لحفظ الطلبات في Google Sheet (اتركيه فارغاً لإرسال الطلبات على واتساب فقط)
   var ORDER_ENDPOINT = '';
+  // دالة Vercel التي ترسل الطلب تلقائياً عبر WhatsApp Cloud API (انظري WHATSAPP_SETUP.md)
+  var ORDER_API = '/api/order';
   var CURRENCY = 'ر.ع';
   var PRODUCTS = [
     { id: 'rashfa',  name: 'كولد برو رشفة', price: 1.700, note: 'الأكثر طلباً' },
@@ -69,6 +71,7 @@
         '</fieldset>' +
 
         '<fieldset class="om-section"><legend>٢. بياناتك</legend>' +
+          '<input name="website" class="om-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
           '<label class="om-field"><span>الاسم</span><input name="name" autocomplete="name" required placeholder="اسمك الكريم"><em class="om-error" data-err="name"></em></label>' +
           '<label class="om-field"><span>رقم الهاتف</span><div class="om-phone"><span class="om-cc">968+</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" required placeholder="9XXXXXXX" dir="ltr"></div><em class="om-error" data-err="phone"></em></label>' +
           '<label class="om-field"><span>المنطقة</span><input name="area" required placeholder="مثال: سمائل — الحي / القرية"><em class="om-error" data-err="area"></em></label>' +
@@ -85,7 +88,7 @@
 
         '<div class="om-footer">' +
           '<div class="om-total"><span>المجموع</span><b>' + money(0) + '</b></div>' +
-          '<button type="submit" class="btn btn-primary om-submit">' + icons.wa + 'إرسال الطلب عبر واتساب</button>' +
+          '<button type="submit" class="btn btn-primary om-submit">' + icons.wa + 'إرسال الطلب</button>' +
         '</div>' +
       '</form>' +
 
@@ -93,16 +96,16 @@
         '<div class="om-check"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></div>' +
         '<h2>شكراً لتواصلك معنا!</h2>' +
         '<p class="om-done-num">رقم طلبك: <b class="ltr" data-order-id></b></p>' +
-        '<div class="om-status">' + icons.clock + '<div><b>طلبك قيد الانتظار</b><span>استلمنا طلبك وراح نتواصل معك على واتساب لتأكيده وتحديد موعد التوصيل. الطلب يبقى بالانتظار إلى أن يتم الرد عليك.</span></div></div>' +
+        '<div class="om-status">' + icons.clock + '<div><b>طلبك قيد الانتظار</b><span data-status-text></span></div></div>' +
         '<div class="om-summary" data-summary></div>' +
-        '<p class="om-hint"><b>مهم:</b> اضغطي «إرسال» داخل واتساب حتى يوصلنا طلبك. إذا ما انفتح واتساب، جرّبي الأزرار تحت.</p>' +
+        '<p class="om-hint" data-manual-only><b>مهم:</b> اضغطي «إرسال» داخل واتساب حتى يوصلنا طلبك. إذا ما انفتح واتساب، جرّبي الروابط تحت.</p>' +
         '<div class="om-done-actions">' +
-          '<a class="btn btn-primary" data-wa-link target="_blank" rel="noopener">' + icons.wa + 'إرسال الطلب على واتساب</a>' +
+          '<a class="btn btn-primary" data-wa-link data-manual-only target="_blank" rel="noopener">' + icons.wa + 'إرسال الطلب على واتساب</a>' +
+          '<button type="button" class="btn btn-ghost" data-close>تم</button>' +
         '</div>' +
-        '<div class="om-alt-actions">' +
+        '<div class="om-alt-actions" data-manual-only>' +
           '<a data-wa-web target="_blank" rel="noopener">فتح واتساب ويب</a>' +
           '<button type="button" data-copy>نسخ نص الطلب</button>' +
-          '<button type="button" data-close>إغلاق</button>' +
         '</div>' +
         '<p class="om-copy-note" hidden>تم نسخ الطلب ✓ الصقيه في محادثة واتساب مع <span class="ltr">+968 9393 3166</span></p>' +
       '</div>' +
@@ -268,65 +271,106 @@
       return;
     }
 
-    var orderId = 'R' + Date.now().toString().slice(-6);
-    // بدون إيموجي: api.whatsapp.com يحوّلها إلى علامات استفهام (�)
-    var lines = [
-      '*طلب جديد - رشفة*',
-      'رقم الطلب: ' + orderId,
-      '',
-      '*الاسم:* ' + v.name,
-      '*الهاتف:* +968 ' + v.phone,
-      '*المنطقة:* ' + v.area
-    ];
-    if (v.map) lines.push('*الموقع:* ' + v.map);
-    if (v.address) lines.push('*العنوان:* ' + v.address);
-    lines.push('', '*الطلبات:*');
-    items.forEach(function (i) { lines.push('- ' + i.name + ' × ' + i.qty + ' = ' + money(i.subtotal)); });
-    lines.push('', '*المجموع: ' + money(total) + '*', 'الدفع عند الاستلام');
-    if (v.notes) lines.push('', '*ملاحظات:* ' + v.notes);
-    var message = lines.join('\n');
-    // نستخدم api.whatsapp.com بدل wa.me لأن wa.me محجوب في بعض الشبكات
-    var waUrl = 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
-    var waWebUrl = 'https://web.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
-    // الجوال: api.whatsapp.com يفتح التطبيق مباشرة
-    // الكمبيوتر: واتساب ويب مباشرة (بدون صفحة Open app / Continue to WhatsApp Web)
-    var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    var primaryUrl = isMobile ? waUrl : waWebUrl;
-    lastMessage = message;
 
-    // نفتح واتساب مباشرة داخل حدث الضغط حتى لا يمنعه المتصفح
-    window.open(primaryUrl, '_blank');
-
-    // حفظ الطلب في Google Sheet (إذا تم الإعداد)
-    if (ORDER_ENDPOINT) {
-      var body = new URLSearchParams({
-        orderId: orderId, name: v.name, phone: '+968' + v.phone, area: v.area,
-        map: v.map, address: v.address, notes: v.notes,
-        items: items.map(function (i) { return i.name + ' × ' + i.qty; }).join('، '),
-        total: total.toFixed(3)
-      });
-      fetch(ORDER_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body }).catch(function () {});
+    // رسالة احتياطية (إذا الإرسال التلقائي غير مُعدّ أو فشل) — بدون إيموجي لأن api.whatsapp.com يحوّلها إلى (�)
+    function buildMessage(orderId) {
+      var lines = [
+        '*طلب جديد - رشفة*',
+        'رقم الطلب: ' + orderId,
+        '',
+        '*الاسم:* ' + v.name,
+        '*الهاتف:* +968 ' + v.phone,
+        '*المنطقة:* ' + v.area
+      ];
+      if (v.map) lines.push('*الموقع:* ' + v.map);
+      if (v.address) lines.push('*العنوان:* ' + v.address);
+      lines.push('', '*الطلبات:*');
+      items.forEach(function (i) { lines.push('- ' + i.name + ' × ' + i.qty + ' = ' + money(i.subtotal)); });
+      lines.push('', '*المجموع: ' + money(total) + '*', 'الدفع عند الاستلام');
+      if (v.notes) lines.push('', '*ملاحظات:* ' + v.notes);
+      return lines.join('\n');
     }
 
-    store(STORE_KEY, { name: v.name, phone: v.phone, area: v.area, address: v.address });
-    store(LAST_ORDER_KEY, { id: orderId, at: Date.now(), total: total });
+    var submitBtn = form.querySelector('.om-submit');
+    var submitLabel = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.classList.add('sending');
+    submitBtn.textContent = 'جاري إرسال طلبك...';
 
-    // شاشة التأكيد
-    done.querySelector('[data-order-id]').textContent = orderId;
-    done.querySelector('[data-wa-link]').href = primaryUrl;
-    // الرابط البديل: الطريقة الثانية حسب الجهاز
-    var alt = done.querySelector('[data-wa-web]');
-    alt.href = isMobile ? waWebUrl : waUrl;
-    alt.textContent = isMobile ? 'فتح واتساب ويب' : 'فتح تطبيق واتساب';
-    done.querySelector('.om-copy-note').hidden = true;
-    done.querySelector('[data-summary]').innerHTML =
-      items.map(function (i) { return '<div><span>' + esc(i.name) + ' × ' + i.qty + '</span><span>' + money(i.subtotal) + '</span></div>'; }).join('') +
-      '<div class="om-summary-total"><span>المجموع</span><span>' + money(total) + '</span></div>';
-    form.hidden = true; done.hidden = false;
-    modal.querySelector('.om-sheet').scrollTop = 0;
-    PRODUCTS.forEach(function (p) { setQty(p.id, 0); });
-    form.elements.notes.value = '';
-    updatePendingBadge();
+    var qtyMap = {};
+    PRODUCTS.forEach(function (p) { if (qty[p.id] > 0) qtyMap[p.id] = qty[p.id]; });
+    var payload = {
+      name: v.name, phone: v.phone, area: v.area, map: v.map,
+      address: v.address, notes: v.notes, items: qtyMap,
+      website: form.elements.website.value
+    };
+
+    // الإرسال التلقائي عبر الخادم (WhatsApp Cloud API) — مع مهلة 15 ثانية
+    var controller = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (controller) controller.abort(); }, 15000);
+    fetch(ORDER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) { return { ok: r.ok && data.ok, data: data }; });
+    }).catch(function () {
+      return { ok: false, data: {} };
+    }).then(function (result) {
+      clearTimeout(timer);
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('sending');
+      submitBtn.innerHTML = submitLabel;
+      if (result.ok) finish(result.data.orderId, true, result.data.customerNotified !== false);
+      else finish('R' + Date.now().toString().slice(-6), false, false);
+    });
+
+    function finish(orderId, auto, customerNotified) {
+      var message = buildMessage(orderId);
+      lastMessage = message;
+      // api.whatsapp.com بدل wa.me لأن wa.me محجوب في بعض الشبكات
+      var waUrl = 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
+      var waWebUrl = 'https://web.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(message);
+      var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+      // حفظ الطلب في Google Sheet (إذا تم الإعداد)
+      if (ORDER_ENDPOINT) {
+        var body = new URLSearchParams({
+          orderId: orderId, name: v.name, phone: '+968' + v.phone, area: v.area,
+          map: v.map, address: v.address, notes: v.notes,
+          items: items.map(function (i) { return i.name + ' × ' + i.qty; }).join('، '),
+          total: total.toFixed(3)
+        });
+        fetch(ORDER_ENDPOINT, { method: 'POST', mode: 'no-cors', body: body }).catch(function () {});
+      }
+
+      store(STORE_KEY, { name: v.name, phone: v.phone, area: v.area, address: v.address });
+      store(LAST_ORDER_KEY, { id: orderId, at: Date.now(), total: total });
+
+      // شاشة التأكيد (الرقم معزول باتجاه LTR حتى لا ينقلب داخل الجملة العربية)
+      var ltrPhone = '⁦+968 ' + v.phone + '⁩';
+      done.querySelector('[data-order-id]').textContent = orderId;
+      done.querySelector('[data-status-text]').textContent = auto
+        ? (customerNotified
+            ? 'وصلنا طلبك، وأرسلنا لك رسالة تأكيد على واتساب على رقم ' + ltrPhone + '. طلبك قيد الانتظار إلى أن نتواصل معك لتأكيده وتحديد موعد التوصيل.'
+            : 'وصلنا طلبك، وراح نتواصل معك على واتساب على رقم ' + ltrPhone + ' لتأكيده وتحديد موعد التوصيل. طلبك قيد الانتظار إلى أن يتم الرد عليك.')
+        : 'خطوة أخيرة: اضغطي الزر تحت لإرسال طلبك لنا على واتساب. بعدها طلبك يبقى قيد الانتظار إلى أن نرد عليك.';
+      done.querySelectorAll('[data-manual-only]').forEach(function (el) { el.hidden = auto; });
+      done.querySelector('[data-wa-link]').href = isMobile ? waUrl : waWebUrl;
+      var alt = done.querySelector('[data-wa-web]');
+      alt.href = isMobile ? waWebUrl : waUrl;
+      alt.textContent = isMobile ? 'فتح واتساب ويب' : 'فتح تطبيق واتساب';
+      done.querySelector('.om-copy-note').hidden = true;
+      done.querySelector('[data-summary]').innerHTML =
+        items.map(function (i) { return '<div><span>' + esc(i.name) + ' × ' + i.qty + '</span><span>' + money(i.subtotal) + '</span></div>'; }).join('') +
+        '<div class="om-summary-total"><span>المجموع</span><span>' + money(total) + '</span></div>';
+      form.hidden = true; done.hidden = false;
+      modal.querySelector('.om-sheet').scrollTop = 0;
+      PRODUCTS.forEach(function (p) { setQty(p.id, 0); });
+      form.elements.notes.value = '';
+      updatePendingBadge();
+    }
   });
 
   /* ===== تنبيه "طلبك قيد الانتظار" عند العودة للموقع ===== */

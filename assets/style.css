@@ -719,6 +719,9 @@ html.om-open{ overflow:hidden; }
 .om-total b.bump{ animation: bump .4s var(--ease-spring); }
 @keyframes bump{ 50%{ transform: scale(1.15); color: var(--maroon-500); } }
 .om-submit{ flex:1; padding-inline: 14px; }
+.om-submit.sending{ opacity:.8; cursor:wait; }
+.om-submit.sending::before{ content:""; width:18px; height:18px; border-radius:50%; border:2px solid rgba(250,244,233,.35); border-top-color: var(--cream-50); animation: spin .8s linear infinite; }
+.om-hp{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
 .om-form.shake{ animation: shake .45s ease; }
 @keyframes shake{ 20%,60%{ transform: translateX(-7px); } 40%,80%{ transform: translateX(7px); } }
 
