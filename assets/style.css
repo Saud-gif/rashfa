@@ -247,22 +247,6 @@ svg{ flex-shrink:0; }
   .seal svg.ring text{ font-size: 10.2px; }
 }
 
-/* ---------- الشريط المتحرك ---------- */
-.marquee{
-  background: var(--maroon-900); color: var(--cream-100);
-  overflow:hidden; padding-block: 16px;
-  transform: rotate(-1.2deg) scale(1.02); margin-block: 10px;
-  box-shadow: var(--shadow-2);
-  position:relative; z-index:3;
-}
-.marquee-track{ display:flex; width:max-content; direction:ltr; animation: marquee 34s linear infinite; }
-.marquee:hover .marquee-track{ animation-play-state: paused; }
-.marquee-group{ display:flex; align-items:center; }
-.marquee-item{ display:flex; align-items:center; gap: 28px; padding-inline: 14px; font-weight:700; font-size: 17px; white-space:nowrap; }
-.marquee-item .ar{ font-family:'Aref Ruqaa', serif; font-size: 22px; direction: rtl; }
-.marquee-item .en{ letter-spacing:.24em; font-size:12.5px; color: var(--wood-400); }
-.marquee-item .star{ color: var(--wood-400); font-size: 14px; }
-@keyframes marquee{ to{ transform: translateX(-50%); } }
 
 /* ---------- بطاقات المينيو ---------- */
 .menu-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
