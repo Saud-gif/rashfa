@@ -3,7 +3,7 @@ const L = require('../lib/rashfa');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return L.send(res, 405, { ok: false, error: 'method_not_allowed' });
-  if (!process.env.SESSION_SECRET) return L.send(res, 503, { ok: false, error: 'not_configured' });
+  if (!L.isConfigured()) return L.send(res, 503, { ok: false, error: 'not_configured' });
 
   const b = L.body(req);
   const username = L.clip(b.username, 40).toLowerCase();
